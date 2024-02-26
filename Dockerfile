@@ -1,5 +1,7 @@
 FROM eclipse-temurin:17-jdk-jammy as builder
 WORKDIR /app
+RUN apt-get update && apt-get install -y curl
+RUN curl -o /app/env.properties https://storage.googleapis.com/personal-website-dimas/env.properties
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
@@ -9,9 +11,6 @@ RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
 COPY ./src ./src
 RUN ./mvnw clean install
-
-RUN apt-get update && apt-get install -y curl
-RUN curl -o /app/env.properties https://storage.googleapis.com/personal-website-dimas/env.properties
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
